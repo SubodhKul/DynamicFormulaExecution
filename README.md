@@ -2,7 +2,6 @@
 
 ## Table of Contents
 - [Project Overview](#project-overview)
-- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Running Tests](#running-tests)
@@ -20,6 +19,20 @@ This project provides dynamic formula execution using Pandas to efficiently comp
 ### Prerequisites
 - Python 3.x
 - `pip` package manager
+- pip install -r requirements.txt
 
+## Runnig Tests
+-pytest -v
+
+## Docker Deployment
+- docker build -t dynamic-formula-execution .
+- docker run -d -p 5000:5000 dynamic-formula-execution
+
+## Technologies Used
+- Python 3.x
+- Pandas
+- Pytest
+- Flask
+  
 ### Git Repo.
    git@github.com:SubodhKul/DynamicFormulaExecution.git

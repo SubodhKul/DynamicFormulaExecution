@@ -16,7 +16,6 @@ def apply_formula_to_df(df,formula):
     try:
         output_var = formula.get("outputVar")
         expression = formula.get("expression")
-        print(df)
         df[output_var] = df.eval(expression)
     except Exception as e:
         raise Exception("Exception occured while evaluating expression",e)
@@ -56,7 +55,7 @@ def format_output(result_df):
 
 def parse_input(df,type_dict):
     """
-    Converts inputs used in expression to float.
+    Converts inputs used in expression to numeric.
     """
     for col, dtype in type_dict.items():
         if col in df.columns:
@@ -68,5 +67,15 @@ def parse_input(df,type_dict):
                 df[col] = df[col].str.rstrip('%').astype(float)
             elif dtype == "datetime":
                 df[col] = pd.to_datetime(df[col], errors = 'coerce')
+            elif dtype == "boolean":
+                def str_to_bool(val):
+                    if isinstance(val, str):
+                        if val.lower() == 'false':
+                            return False
+                        elif val.lower() == 'true':
+                            return True
+                    return val 
+                df[col] = df[col].apply(str_to_bool)
+
 
     return df

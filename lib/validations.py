@@ -31,7 +31,8 @@ def validate_input(func):
             for formula in formulas:
                 if formula.get("outputVar") and formula.get("expression") and formula.get("inputs"):
                     missing_values = invalid_formulas_dataframe(formula.get("inputs"),formula.get("expression"))
-                    if missing_values:
+                    
+                    if missing_values and missing_values != {0}:
                         raise Exception(f"Missing Values {missing_values}")
                 else:
                     raise Exception(f"Invalid Formula {formula}. Formula should have outputVar,expression and inputs")
@@ -44,12 +45,12 @@ def validate_input(func):
 
 def invalid_formulas_dataframe(inputs,expression):
     """
-    validates formulas; checks that inputs have all the variables present in formulas.
+    validates formulas; checks that inputs have all the variables present in expression.
     """
-    data = request.get_json()
+    
     df = pd.DataFrame(inputs)
     values_in_input = set(df['varName'].dropna())
-    values_in_expression = set(extract_variables(expression))
+    values_in_expression = set(extract_variables(expression)[0])
 
     if not values_in_expression.issubset(values_in_input):
         missing_values = values_in_expression - values_in_input
@@ -58,8 +59,8 @@ def invalid_formulas_dataframe(inputs,expression):
         return False
 
 def extract_variables(expression):
-     exp_df = pd.DataFrame(re.findall(r'\bw+\b', expression))
-     return exp_df
+    exp_df = pd.DataFrame(re.findall(r"\b[a-zA-Z_][a-zA-Z_0-9]*\b(?!\s*\()", expression))
+    return exp_df
 
     
     
